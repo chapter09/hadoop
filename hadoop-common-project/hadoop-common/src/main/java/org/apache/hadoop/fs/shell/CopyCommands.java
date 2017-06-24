@@ -21,6 +21,7 @@ package org.apache.hadoop.fs.shell;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
@@ -47,6 +48,7 @@ class CopyCommands {
     factory.addClass(CopyToLocal.class, "-copyToLocal");
     factory.addClass(Get.class, "-get");
     factory.addClass(Put.class, "-put");
+    factory.addClass(PutX.class, "-putx");
     factory.addClass(AppendToFile.class, "-appendToFile");
   }
 
@@ -211,11 +213,12 @@ class CopyCommands {
   }
 
   /**
-   *  Copy local files to a remote filesystem
+   *  Copy local files to a remote filesystem and specified datanodes
    */
-  public static class Put extends CommandWithDestination {
+  public static class PutX extends Put {
     public static final String NAME = "put";
-    public static final String USAGE = "[-f] [-p] [-l] <localsrc> ... <dst>";
+    public static final String USAGE =
+            "[-f] [-p] [-l] <localsrc> ... <dst> <nodes>";
     public static final String DESCRIPTION =
       "Copy files from the local file system " +
       "into fs. Copying fails if the file already " +
@@ -226,6 +229,50 @@ class CopyCommands {
       "  -l : Allow DataNode to lazily persist the file to disk. Forces\n" +
       "       replication factor of 1. This flag will result in reduced\n" +
       "       durability. Use with care.\n";
+
+    @Override
+    protected void processOptions(LinkedList<String> args) throws IOException {
+      CommandFormat cf = new CommandFormat(
+              1, Integer.MAX_VALUE,
+              "f", "p", "l");
+      cf.parse(args);
+      setOverwrite(cf.getOpt("f"));
+      setPreserve(cf.getOpt("p"));
+      setLazyPersist(cf.getOpt("l"));
+      getFavoredNodes(args);
+      getRemoteDestination(args);
+      // should have a -r option
+      setRecursive(true);
+    }
+
+    @Override
+    protected void processArguments(LinkedList<PathData> args)
+    throws IOException {
+      // NOTE: this logic should be better, mimics previous implementation
+      if (args.size() == 1 && args.get(0).toString().equals("-")) {
+        copyStreamToTarget(System.in, getTargetPath(args.get(0)));
+        return;
+      }
+      super.processArguments(args);
+    }
+  }
+
+  /**
+   *  Copy local files to a remote filesystem
+   */
+  public static class Put extends CommandWithDestination {
+    public static final String NAME = "put";
+    public static final String USAGE = "[-f] [-p] [-l] <localsrc> ... <dst>";
+    public static final String DESCRIPTION =
+            "Copy files from the local file system " +
+                    "into fs. Copying fails if the file already " +
+                    "exists, unless the -f flag is given.\n" +
+                    "Flags:\n" +
+                    "  -p : Preserves access and modification times, ownership and the mode.\n" +
+                    "  -f : Overwrites the destination if it already exists.\n" +
+                    "  -l : Allow DataNode to lazily persist the file to disk. Forces\n" +
+                    "       replication factor of 1. This flag will result in reduced\n" +
+                    "       durability. Use with care.\n";
 
     @Override
     protected void processOptions(LinkedList<String> args) throws IOException {
@@ -258,7 +305,7 @@ class CopyCommands {
 
     @Override
     protected void processArguments(LinkedList<PathData> args)
-    throws IOException {
+            throws IOException {
       // NOTE: this logic should be better, mimics previous implementation
       if (args.size() == 1 && args.get(0).toString().equals("-")) {
         copyStreamToTarget(System.in, getTargetPath(args.get(0)));
@@ -273,7 +320,7 @@ class CopyCommands {
     public static final String USAGE = Put.USAGE;
     public static final String DESCRIPTION = "Identical to the -put command.";
   }
- 
+
   public static class CopyToLocal extends Get {
     public static final String NAME = "copyToLocal";
     public static final String USAGE = Get.USAGE;
