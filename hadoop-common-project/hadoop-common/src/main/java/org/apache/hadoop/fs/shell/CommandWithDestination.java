@@ -63,7 +63,8 @@ abstract class CommandWithDestination extends FsCommand {
   private boolean writeChecksum = true;
   private boolean lazyPersist = false;
 
-  private List<InetSocketAddress> favoredNodes;
+  private List<InetSocketAddress> favoredNodes =
+          new LinkedList<InetSocketAddress>();
 
 
   /**
