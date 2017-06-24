@@ -248,6 +248,8 @@ class CopyCommands {
     @Override
     protected void processArguments(LinkedList<PathData> args)
     throws IOException {
+      System.out.println(args);
+
       // NOTE: this logic should be better, mimics previous implementation
       if (args.size() == 1 && args.get(0).toString().equals("-")) {
         copyStreamToTarget(System.in, getTargetPath(args.get(0)));
