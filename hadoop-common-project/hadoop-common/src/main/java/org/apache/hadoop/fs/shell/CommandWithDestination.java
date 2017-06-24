@@ -221,6 +221,7 @@ abstract class CommandWithDestination extends FsCommand {
         System.out.println(addr);
         InetSocketAddress favoredNode = new InetSocketAddress(addr, 50010);
         favoredNodes.add(favoredNode);
+        System.out.println(favoredNodes);
       }
     }
   }
