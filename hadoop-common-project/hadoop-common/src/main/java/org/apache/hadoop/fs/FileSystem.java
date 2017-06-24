@@ -1017,7 +1017,6 @@ public abstract class FileSystem extends Configured implements Closeable {
       ChecksumOpt checksumOpt,
       final InetSocketAddress[] favoredNodes) throws IOException {
 
-    System.out.println("Here is favoredNodes: ");
     return this.create(f, permission, flags, bufferSize, replication,
             blockSize, progress, checksumOpt, favoredNodes);
   }
