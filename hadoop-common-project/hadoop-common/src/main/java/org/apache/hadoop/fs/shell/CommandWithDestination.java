@@ -20,6 +20,7 @@ package org.apache.hadoop.fs.shell;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.EnumSet;
@@ -61,7 +62,10 @@ abstract class CommandWithDestination extends FsCommand {
   private boolean verifyChecksum = true;
   private boolean writeChecksum = true;
   private boolean lazyPersist = false;
-  
+
+  private List<InetSocketAddress> favoredNodes;
+
+
   /**
    * The name of the raw xattr namespace. It would be nice to use
    * XAttr.RAW.name() but we can't reference the hadoop-hdfs project.
@@ -194,6 +198,25 @@ abstract class CommandWithDestination extends FsCommand {
           break;
         default:
           throw new PathIOException(pathString, "Too many matches");
+      }
+    }
+  }
+
+  /**
+   *  The last arg is expected to be a remote path, if only one argument is
+   *  given then the destination will be the remote user's directory
+   *  @param args is the list of arguments
+   *  @throws PathIOException if path doesn't exist or matches too many times
+   */
+  protected void getFavoredNodes(LinkedList<String> args)
+          throws IOException {
+    if (args.size() < 3) {
+      favoredNodes = null;
+    } else {
+      while (args.size() != 2) {
+        String addr = args.removeLast();
+        InetSocketAddress favoredNode = new InetSocketAddress(addr, 50010);
+        favoredNodes.add(favoredNode);
       }
     }
   }

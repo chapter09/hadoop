@@ -42,7 +42,7 @@ public class CommandFormat {
    * @see #CommandFormat(int, int, String...)
    */
   @Deprecated
-  public CommandFormat(String n, int min, int max, String ... possibleOpt) {
+  public CommandFormat(String name, int min, int max, String ... possibleOpt) {
     this(min, max, possibleOpt);
   }
   
