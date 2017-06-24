@@ -417,7 +417,11 @@ abstract class CommandWithDestination extends FsCommand {
     try {
       PathData tempTarget = target.suffix("._COPYING_");
       targetFs.setWriteChecksum(writeChecksum);
-      targetFs.writeStreamToFile(in, tempTarget, lazyPersist);
+      if (favoredNodes.size() > 0) {
+        targetFs.writeStreamToFile(in, tempTarget, lazyPersist, favoredNodes);
+      } else {
+        targetFs.writeStreamToFile(in, tempTarget, lazyPersist);
+      }
       targetFs.rename(tempTarget, target);
     } finally {
       targetFs.close(); // last ditch effort to ensure temp file is removed
@@ -497,6 +501,19 @@ abstract class CommandWithDestination extends FsCommand {
         IOUtils.closeStream(out); // just in case copyBytes didn't
       }
     }
+
+    void writeStreamToFile(InputStream in, PathData target,
+                           boolean lazyPersist,
+                           List<InetSocketAddress> favoredNodes)
+            throws IOException {
+      FSDataOutputStream out = null;
+      try {
+        out = create(target, lazyPersist, favoredNodes);
+        IOUtils.copyBytes(in, out, getConf(), true);
+      } finally {
+        IOUtils.closeStream(out); // just in case copyBytes didn't
+      }
+    }
     
     // tag created files as temp files
     FSDataOutputStream create(PathData item, boolean lazyPersist)
@@ -513,6 +530,32 @@ abstract class CommandWithDestination extends FsCommand {
                         getDefaultBlockSize(),
                         null,
                         null);
+        } else {
+          return create(item.path, true);
+        }
+      } finally { // might have been created but stream was interrupted
+        deleteOnExit(item.path);
+      }
+    }
+
+    // tag created files as temp files
+    FSDataOutputStream create(PathData item, boolean lazyPersist,
+                              List<InetSocketAddress> favoredNodes)
+            throws IOException {
+      try {
+        if (lazyPersist) {
+          EnumSet<CreateFlag> createFlags = EnumSet.of(CREATE, LAZY_PERSIST);
+          return create(item.path,
+                  FsPermission.getFileDefault().applyUMask(
+                          FsPermission.getUMask(getConf())),
+                  createFlags,
+                  getConf().getInt("io.file.buffer.size", 4096),
+                  lazyPersist ? 1 : getDefaultReplication(item.path),
+                  getDefaultBlockSize(),
+                  null,
+                  null,
+                  favoredNodes.toArray(
+                          new InetSocketAddress[favoredNodes.size()]));
         } else {
           return create(item.path, true);
         }
