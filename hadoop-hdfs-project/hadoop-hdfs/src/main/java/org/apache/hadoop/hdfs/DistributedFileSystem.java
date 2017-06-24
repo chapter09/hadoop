@@ -406,6 +406,8 @@ public class DistributedFileSystem extends FileSystem {
       final int bufferSize, final short replication, final long blockSize,
       final Progressable progress, final InetSocketAddress[] favoredNodes)
           throws IOException {
+    System.out.println("Here is favoredNodes: ");
+    System.out.println(favoredNodes);
     statistics.incrementWriteOps(1);
     Path absF = fixRelativePart(f);
     return new FileSystemLinkResolver<HdfsDataOutputStream>() {
