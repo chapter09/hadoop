@@ -508,6 +508,7 @@ abstract class CommandWithDestination extends FsCommand {
             throws IOException {
       FSDataOutputStream out = null;
       try {
+        System.out.println("writeStreamToFile " + favoredNodes);
         out = create(target, lazyPersist, favoredNodes);
         IOUtils.copyBytes(in, out, getConf(), true);
       } finally {
@@ -544,6 +545,8 @@ abstract class CommandWithDestination extends FsCommand {
             throws IOException {
       try {
         if (lazyPersist) {
+          System.out.println("CommandWithDest.create " + favoredNodes);
+
           EnumSet<CreateFlag> createFlags = EnumSet.of(CREATE, LAZY_PERSIST);
           return create(item.path,
                   FsPermission.getFileDefault().applyUMask(
