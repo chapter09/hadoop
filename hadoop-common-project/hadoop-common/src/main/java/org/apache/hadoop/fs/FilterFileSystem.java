@@ -19,6 +19,7 @@
 package org.apache.hadoop.fs;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.EnumSet;
@@ -191,6 +192,20 @@ public class FilterFileSystem extends FileSystem {
         ChecksumOpt checksumOpt) throws IOException {
     return fs.create(f, permission,
       flags, bufferSize, replication, blockSize, progress, checksumOpt);
+  }
+
+  @Override
+  public FSDataOutputStream create(Path f,
+      FsPermission permission,
+      EnumSet<CreateFlag> flags,
+      int bufferSize,
+      short replication,
+      long blockSize,
+      Progressable progress,
+      ChecksumOpt checksumOpt,
+      final InetSocketAddress[] favoredNodes) throws IOException {
+    return fs.create(f, permission, flags, bufferSize, replication,
+            blockSize, progress, checksumOpt, favoredNodes);
   }
   
   @Override

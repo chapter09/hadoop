@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.ref.ReferenceQueue;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.PrivilegedExceptionAction;
@@ -902,12 +903,12 @@ public abstract class FileSystem extends Configured implements Closeable {
    * @param replication required block replication for the file. 
    */
   public FSDataOutputStream create(Path f,
-                                            boolean overwrite,
-                                            int bufferSize,
-                                            short replication,
-                                            long blockSize,
-                                            Progressable progress
-                                            ) throws IOException {
+                                   boolean overwrite,
+                                   int bufferSize,
+                                   short replication,
+                                  long blockSize,
+                                   Progressable progress
+                                   ) throws IOException {
     return this.create(f, FsPermission.getFileDefault().applyUMask(
         FsPermission.getUMask(getConf())), overwrite, bufferSize,
         replication, blockSize, progress);
@@ -987,6 +988,37 @@ public abstract class FileSystem extends Configured implements Closeable {
     // support is currently only available in DFS.
     return create(f, permission, flags.contains(CreateFlag.OVERWRITE), 
         bufferSize, replication, blockSize, progress);
+  }
+
+
+  /**
+   * Create an FSDataOutputStream at the indicated Path with a custom
+   * checksum option
+   * @param f the file name to open
+   * @param permission
+   * @param flags {@link CreateFlag}s to use for this stream.
+   * @param bufferSize the size of the buffer to be used.
+   * @param replication required block replication for the file.
+   * @param blockSize
+   * @param progress
+   * @param checksumOpt checksum parameter. If null, the values
+   *        found in conf will be used.
+   * @param favoredNodes favored datandoes. If null, no favored nodes.
+   * @throws IOException
+   * @see #setPermission(Path, FsPermission)
+   */
+  public FSDataOutputStream create(Path f,
+      FsPermission permission,
+      EnumSet<CreateFlag> flags,
+      int bufferSize,
+      short replication,
+      long blockSize,
+      Progressable progress,
+      ChecksumOpt checksumOpt,
+      final InetSocketAddress[] favoredNodes) throws IOException {
+
+    return this.create(f, permission, flags, bufferSize, replication,
+            blockSize, progress, checksumOpt, favoredNodes);
   }
 
   /*.
@@ -3136,7 +3168,7 @@ public abstract class FileSystem extends Configured implements Closeable {
      * For each StatisticsData object, we will call accept on the visitor.
      * Finally, at the end, we will call aggregate to get the final total. 
      *
-     * @param         The visitor to use.
+     * @param         visitor The visitor to use.
      * @return        The total.
      */
     private synchronized <T> T visitAll(StatisticsAggregator<T> visitor) {
