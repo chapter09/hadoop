@@ -560,7 +560,9 @@ abstract class CommandWithDestination extends FsCommand {
                   favoredNodes.toArray(
                           new InetSocketAddress[favoredNodes.size()]));
         } else {
-          return create(item.path, true);
+          return createX(item.path, true,
+                  favoredNodes.toArray(
+                          new InetSocketAddress[favoredNodes.size()]));
         }
       } finally { // might have been created but stream was interrupted
         deleteOnExit(item.path);

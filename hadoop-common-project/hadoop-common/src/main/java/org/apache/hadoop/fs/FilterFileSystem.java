@@ -194,18 +194,32 @@ public class FilterFileSystem extends FileSystem {
       flags, bufferSize, replication, blockSize, progress, checksumOpt);
   }
 
-  @Override
   public FSDataOutputStream create(Path f,
-      FsPermission permission,
-      EnumSet<CreateFlag> flags,
-      int bufferSize,
-      short replication,
-      long blockSize,
-      Progressable progress,
-      ChecksumOpt checksumOpt,
-      final InetSocketAddress[] favoredNodes) throws IOException {
+        FsPermission permission,
+        EnumSet<CreateFlag> flags,
+        int bufferSize,
+        short replication,
+        long blockSize,
+        Progressable progress,
+        ChecksumOpt checksumOpt,
+        final InetSocketAddress[] favoredNodes) throws IOException {
     return fs.create(f, permission, flags, bufferSize, replication,
             blockSize, progress, checksumOpt, favoredNodes);
+  }
+
+
+  public FSDataOutputStream createX(Path f, boolean overwrite,
+      final InetSocketAddress[] favoredNodes) throws IOException {
+
+    return fs.create(f,
+            FsPermission.getFileDefault().applyUMask(
+            FsPermission.getUMask(getConf())),
+            overwrite,
+            getConf().getInt("io.file.buffer.size", 4096),
+            getDefaultReplication(f),
+            getDefaultBlockSize(f),
+            null,
+            favoredNodes);
   }
   
   @Override

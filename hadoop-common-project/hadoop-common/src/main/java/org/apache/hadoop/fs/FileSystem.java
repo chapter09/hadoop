@@ -996,31 +996,49 @@ public abstract class FileSystem extends Configured implements Closeable {
    * checksum option
    * @param f the file name to open
    * @param permission
-   * @param flags {@link CreateFlag}s to use for this stream.
+   * @param flags
    * @param bufferSize the size of the buffer to be used.
    * @param replication required block replication for the file.
    * @param blockSize
    * @param progress
-   * @param checksumOpt checksum parameter. If null, the values
-   *        found in conf will be used.
+   * @param checksumOpt
    * @param favoredNodes favored datandoes. If null, no favored nodes.
    * @throws IOException
    * @see #setPermission(Path, FsPermission)
    */
-  public FSDataOutputStream create(Path f,
-      FsPermission permission,
-      EnumSet<CreateFlag> flags,
-      int bufferSize,
-      short replication,
-      long blockSize,
-      Progressable progress,
-      ChecksumOpt checksumOpt,
-      final InetSocketAddress[] favoredNodes) throws IOException {
-    System.out.println("Here is favoredNodes: " + favoredNodes);
+  public FSDataOutputStream create(final Path f,
+    final FsPermission permission, EnumSet<CreateFlag> flags,
+    final int bufferSize, final short replication, final long blockSize,
+    final Progressable progress, ChecksumOpt checksumOpt,
+    final InetSocketAddress[] favoredNodes) throws IOException {
 
     return this.create(f, permission, flags, bufferSize, replication,
             blockSize, progress, checksumOpt, favoredNodes);
-  }
+  };
+
+  /**
+   * Create an FSDataOutputStream at the indicated Path with a custom
+   * checksum option
+   * @param f the file name to open
+   * @param permission
+   * @param overwrite
+   * @param bufferSize the size of the buffer to be used.
+   * @param replication required block replication for the file.
+   * @param blockSize
+   * @param progress
+   * @param favoredNodes favored datandoes. If null, no favored nodes.
+   * @throws IOException
+   * @see #setPermission(Path, FsPermission)
+   */
+  public FSDataOutputStream create(final Path f,
+    final FsPermission permission, boolean overwrite,
+    final int bufferSize, final short replication, final long blockSize,
+    final Progressable progress, final InetSocketAddress[] favoredNodes)
+          throws IOException {
+
+    return this.create(f, permission, overwrite, bufferSize, replication,
+            blockSize, progress, favoredNodes);
+  };
 
   /*.
    * This create has been added to support the FileContext that processes

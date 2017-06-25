@@ -434,6 +434,17 @@ public class DistributedFileSystem extends FileSystem {
       }
     }.resolve(this, absF);
   }
+
+  @Override
+  public FSDataOutputStream create(final Path f,
+    final FsPermission permission, EnumSet<CreateFlag> flags,
+    final int bufferSize, final short replication, final long blockSize,
+    final Progressable progress, ChecksumOpt checksumOpt,
+    final InetSocketAddress[] favoredNodes) throws IOException {
+
+    return this.create(f, permission, flags.contains(CreateFlag.OVERWRITE),
+            bufferSize, replication, blockSize, progress, favoredNodes);
+  }
   
   @Override
   public FSDataOutputStream create(final Path f, final FsPermission permission,
