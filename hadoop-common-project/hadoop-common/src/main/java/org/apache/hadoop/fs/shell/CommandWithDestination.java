@@ -212,17 +212,17 @@ abstract class CommandWithDestination extends FsCommand {
   protected void getFavoredNodes(LinkedList<String> args)
           throws IOException {
 
-    System.out.println(args);
+//    System.out.println(args);
 
     if (args.size() < 3) {
       favoredNodes = null;
     } else {
       while (args.size() != 2) {
         String addr = args.removeLast();
-        System.out.println(addr);
+//        System.out.println(addr);
         InetSocketAddress favoredNode = new InetSocketAddress(addr, 50010);
         favoredNodes.add(favoredNode);
-        System.out.println(favoredNodes);
+//        System.out.println(favoredNodes);
       }
     }
   }

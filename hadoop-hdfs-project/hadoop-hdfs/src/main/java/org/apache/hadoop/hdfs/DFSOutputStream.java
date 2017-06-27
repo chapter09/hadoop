@@ -1423,17 +1423,18 @@ public class DFSOutputStream extends FSOutputSummer
         return null;
       } else {
 
-        System.out.println("DFSOutput nodes: " + Arrays.toString(nodes));
-        System.out.println("DFSOutput: favoredNodes" + Arrays.toString(favoredNodes));
+        System.out.println("DFSOutput favoredNodes" + Arrays.toString(favoredNodes));
 
         boolean[] pinnings = new boolean[nodes.length];
         HashSet<String> favoredSet =
             new HashSet<String>(Arrays.asList(favoredNodes));
 
         for (int i = 0; i < nodes.length; i++) {
+
           System.out.println("DFSOutput nodes: " + nodes[i].getXferAddrWithHostname());
           pinnings[i] = favoredSet.remove(nodes[i].getXferAddrWithHostname()) ||
                   favoredSet.remove(nodes[i].getInfoAddr());
+
           if (DFSClient.LOG.isDebugEnabled()) {
             DFSClient.LOG.debug(nodes[i].getXferAddrWithHostname() +
                 " was chosen by name node (favored=" + pinnings[i] +
