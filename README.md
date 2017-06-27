@@ -11,6 +11,15 @@ and this [patch](https://issues.apache.org/jira/browse/HDFS-2576).
 I have added a command named `putx` to the DFS command family. It's a variant of 
 the command `put`.
 
+
+#### Config
+
+HDFS-6133 provides the ability to exclude favored-nodes (pinned) blocks from the 
+HDFS load balancer, by setting the `dfs.datanode.block-pinning.enabled` property to 
+`true` in the HDFS service configuration.
+
+This setting prevents HDFS load balancer moving your data to other nodes.
+
 #### Usage
 
 ```shell
