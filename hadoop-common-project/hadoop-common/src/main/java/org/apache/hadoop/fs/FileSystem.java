@@ -1014,7 +1014,7 @@ public abstract class FileSystem extends Configured implements Closeable {
 
     return this.create(f, permission, flags, bufferSize, replication,
             blockSize, progress, checksumOpt, favoredNodes);
-  };
+  }
 
   /**
    * Create an FSDataOutputStream at the indicated Path with a custom
@@ -1038,7 +1038,7 @@ public abstract class FileSystem extends Configured implements Closeable {
 
     return this.create(f, permission, overwrite, bufferSize, replication,
             blockSize, progress, favoredNodes);
-  };
+  }
 
   /*.
    * This create has been added to support the FileContext that processes
