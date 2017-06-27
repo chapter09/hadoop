@@ -51,3 +51,8 @@ DFSOutput nodes: hao-ml-3:50010(10.12.3.38:50010)
 #### Todo
 
 - [ ] replace the `nodes` with the `favoredNodes` to implement one-shot enforcement. 
+This needs some efforts on HDFS block placement policy
+
+
+
+![](http://www.haow.ca/images/wh_c.png) Hao Wang (haowang@ece.utoronto.ca)
