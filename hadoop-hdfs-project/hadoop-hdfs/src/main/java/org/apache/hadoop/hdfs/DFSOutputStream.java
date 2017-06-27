@@ -1422,6 +1422,10 @@ public class DFSOutputStream extends FSOutputSummer
       if (favoredNodes == null) {
         return null;
       } else {
+
+        System.out.println("DFSOutput nodes: " + nodes);
+        System.out.println("DFSOutput: favoredNodes" + favoredNodes);
+
         boolean[] pinnings = new boolean[nodes.length];
         HashSet<String> favoredSet =
             new HashSet<String>(Arrays.asList(favoredNodes));
