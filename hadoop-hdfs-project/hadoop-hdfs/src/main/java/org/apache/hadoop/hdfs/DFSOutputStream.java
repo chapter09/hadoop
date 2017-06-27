@@ -1432,7 +1432,8 @@ public class DFSOutputStream extends FSOutputSummer
 
         for (int i = 0; i < nodes.length; i++) {
           System.out.println("DFSOutput nodes: " + nodes[i].getXferAddrWithHostname());
-          pinnings[i] = favoredSet.remove(nodes[i].getXferAddrWithHostname());
+          pinnings[i] = favoredSet.remove(nodes[i].getXferAddrWithHostname()) ||
+                  favoredSet.remove(nodes[i].getInfoAddr());
           if (DFSClient.LOG.isDebugEnabled()) {
             DFSClient.LOG.debug(nodes[i].getXferAddrWithHostname() +
                 " was chosen by name node (favored=" + pinnings[i] +
