@@ -50,4 +50,4 @@ DFSOutput nodes: hao-ml-3:50010(10.12.3.38:50010)
 
 #### Todo
 
-- [] replace the `nodes` with the `favoredNodes` to implement one-shot enforcement. 
+- [ ] replace the `nodes` with the `favoredNodes` to implement one-shot enforcement. 
