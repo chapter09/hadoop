@@ -1431,6 +1431,7 @@ public class DFSOutputStream extends FSOutputSummer
             new HashSet<String>(Arrays.asList(favoredNodes));
 
         for (int i = 0; i < nodes.length; i++) {
+          System.out.println("DFSOutput nodes: " + nodes[i].getXferAddrWithHostname());
           pinnings[i] = favoredSet.remove(nodes[i].getXferAddrWithHostname());
           if (DFSClient.LOG.isDebugEnabled()) {
             DFSClient.LOG.debug(nodes[i].getXferAddrWithHostname() +
@@ -1444,7 +1445,6 @@ public class DFSOutputStream extends FSOutputSummer
               "These favored nodes were specified but not chosen: " +
               favoredSet +
               " Specified favored nodes: " + Arrays.toString(favoredNodes));
-
         }
         return pinnings;
       }
