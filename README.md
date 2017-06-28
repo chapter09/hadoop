@@ -1,6 +1,6 @@
 ### HDFS putx command
 
-Hao Wang [haowang@ece.utoronto.ca](mailto:haowang@ece.utoronto.ca)
+Hao Wang <[haowang@ece.utoronto.ca](mailto:haowang@ece.utoronto.ca)>
 
 ---
 
@@ -67,7 +67,7 @@ DFSOutput nodes: hao-ml-3:50010(10.12.3.38:50010)
 This needs some efforts on HDFS block placement policy
 
 
-#### Discussion
+#### Notes
 
 `DFSOutputStream` passes `favoredNodes` to `namenode`:
 
