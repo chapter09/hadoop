@@ -67,6 +67,28 @@ DFSOutput nodes: hao-ml-3:50010(10.12.3.38:50010)
 This needs some efforts on HDFS block placement policy
 
 
+#### Discussion
+
+`DFSOutputStream` passes `favoredNodes` to `namenode`:
+
+```java
+dfsClient.namenode.addBlock(src, dfsClient.clientName,
+                block, excludedNodes, fileId, favoredNodes);
+```
+
+`namenode` parses the `favoredNodes` and finds out the placement policy. 
+
+```java
+//BlockManager.java
+List<DatanodeDescriptor> favoredDatanodeDescriptors = 
+    getDatanodeDescriptors(favoredNodes);
+final BlockStoragePolicy storagePolicy = storagePolicySuite.getPolicy(storagePolicyID);
+final DatanodeStorageInfo[] targets = blockplacement.chooseTarget(src,
+    numOfReplicas, client, excludedNodes, blocksize, 
+    favoredDatanodeDescriptors, storagePolicy);
+```
+
+
 <p align="right">
 <img src="http://www.haow.ca/images/wh_c.png" width=80px" />
 </p>
