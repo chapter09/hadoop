@@ -1563,6 +1563,11 @@ public class BlockManager {
       final byte storagePolicyID) throws IOException {
     List<DatanodeDescriptor> favoredDatanodeDescriptors = 
         getDatanodeDescriptors(favoredNodes);
+
+    if(!favoredDatanodeDescriptors.isEmpty()) {
+      return (DatanodeStorageInfo[]) favoredDatanodeDescriptors.toArray();
+    }
+
     final BlockStoragePolicy storagePolicy = storagePolicySuite.getPolicy(storagePolicyID);
     final DatanodeStorageInfo[] targets = blockplacement.chooseTarget(src,
         numOfReplicas, client, excludedNodes, blocksize, 
