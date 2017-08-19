@@ -11,6 +11,32 @@ and this [patch](https://issues.apache.org/jira/browse/HDFS-2576).
 I have added a command named `putx` to the DFS command family. It's a variant of 
 the command `put`.
 
+#### Compile
+
+Install dependencies
+
+```shell
+sudo apt-get install libprotobuf-dev libprotoc-dev libprotobuf-dev \
+protobuf-c-compiler make cmake gcc g++ zlib1g-dev libssl-dev build-essential \
+libglib2.0-dev libxrender-dev  libxtst-dev libxtst6
+```
+
+```shell
+wget https://github.com/google/protobuf/releases/download/v2.5.0/protobuf-2.5.0.tar.gz
+tar xzvf protobuf-2.5.0.tar.gz
+cd  protobuf-2.5.0
+./configure
+make
+make check
+sudo make install
+sudo ldconfig
+protoc --version
+```
+
+```shell
+mvn package -Pdist,native -Psrc -Dtar -DskipTests
+```
+
 
 #### Config
 
@@ -51,19 +77,9 @@ policy. So there's no guarantee that the `favoredNodes` will be enforced.
 However, you could repeat `putx` with `-f` until it succeeds placing the data on 
 the node you prefer. 
 
-Failure examples:
-
-```shell
-❯ hdfs dfs -putx -f test2 / hao-ml-1
-writeStreamToFile [hao-ml-1:50010]
-DFSOutput favoredNodes[hao-ml-1:50010]
-DFSOutput nodes: hao-ml-3:50010(10.12.3.38:50010)
-17/06/27 11:16:20 WARN hdfs.DFSClient: These favored nodes were specified but not chosen: [hao-ml-1:50010] Specified favored nodes: [hao-ml-1:50010]
-```
-
 #### Todo
 
-- [ ] replace the `nodes` with the `favoredNodes` to implement one-shot enforcement. 
+- [x] replace the `nodes` with the `favoredNodes` to implement one-shot enforcement. 
 This needs some efforts on HDFS block placement policy
 
 
