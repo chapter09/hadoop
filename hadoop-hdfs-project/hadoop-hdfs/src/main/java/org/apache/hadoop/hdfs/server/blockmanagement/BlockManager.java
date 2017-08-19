@@ -1564,14 +1564,16 @@ public class BlockManager {
     List<DatanodeDescriptor> favoredDatanodeDescriptors = 
         getDatanodeDescriptors(favoredNodes);
 
-    if(!favoredDatanodeDescriptors.isEmpty()) {
-      return (DatanodeStorageInfo[]) favoredDatanodeDescriptors.toArray();
+    if(!favoredNodes.isEmpty()) {
+      DatanodeDescriptor favoredNode = favoredDatanodeDescriptors.get(0);
+      return favoredNode.getStorageInfos();
     }
 
     final BlockStoragePolicy storagePolicy = storagePolicySuite.getPolicy(storagePolicyID);
     final DatanodeStorageInfo[] targets = blockplacement.chooseTarget(src,
         numOfReplicas, client, excludedNodes, blocksize, 
         favoredDatanodeDescriptors, storagePolicy);
+
     if (targets.length < minReplication) {
       throw new IOException("File " + src + " could only be replicated to "
           + targets.length + " nodes instead of minReplication (="
