@@ -1564,7 +1564,7 @@ public class BlockManager {
     List<DatanodeDescriptor> favoredDatanodeDescriptors = 
         getDatanodeDescriptors(favoredNodes);
 
-    if(!favoredNodes.isEmpty()) {
+    if( favoredNodes != null && !favoredNodes.isEmpty()) {
       DatanodeDescriptor favoredNode = favoredDatanodeDescriptors.get(0);
       return favoredNode.getStorageInfos();
     }
