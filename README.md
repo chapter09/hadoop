@@ -82,6 +82,7 @@ the node you prefer.
 - [x] replace the `nodes` with the `favoredNodes` to implement one-shot enforcement. 
 This needs some efforts on HDFS block placement policy
 
+- [] A known bug: using a hostname may not work
 
 #### Notes
 
